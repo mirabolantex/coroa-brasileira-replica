@@ -1,13 +1,20 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
-import { Crown, Menu, MessageCircle, Search, User, X, Wallet } from 'lucide-react';
+import { Crown, Menu, MessageCircle, Search, X, Wallet } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = React.useState(false);
-  const [isLoggedIn] = React.useState(false);
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [profileImage, setProfileImage] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    // Check if user is logged in from localStorage
+    const userLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+    setIsLoggedIn(userLoggedIn);
+  }, []);
 
   return (
     <nav className="bg-background border-b border-border shadow-md py-3 sticky top-0 z-50">
@@ -106,14 +113,6 @@ const Navbar = () => {
               >
                 <Wallet size={18} />
                 <span>Carteira</span>
-              </Link>
-              <Link 
-                to="/perfil" 
-                className="text-gray-300 hover:text-coroa-purple transition-colors py-2 flex items-center gap-2"
-                onClick={() => setMenuOpen(false)}
-              >
-                <User size={18} />
-                <span>Meu Perfil</span>
               </Link>
               <Button className="btn-gradient">Premium</Button>
             </div>

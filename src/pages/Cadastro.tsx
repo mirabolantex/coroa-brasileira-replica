@@ -1,17 +1,19 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Crown, ArrowRight, Facebook, Mail } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { useToast } from "@/components/ui/use-toast";
 
 const Cadastro = () => {
   const [step, setStep] = React.useState(1);
   const totalSteps = 3;
+  const navigate = useNavigate();
+  const { toast } = useToast();
   
   const handleNextStep = () => {
     setStep((prev) => prev < totalSteps ? prev + 1 : prev);
@@ -19,6 +21,22 @@ const Cadastro = () => {
   
   const handlePrevStep = () => {
     setStep((prev) => prev > 1 ? prev - 1 : prev);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Simulate successful registration
+    localStorage.setItem('userLoggedIn', 'true');
+    
+    // Show success message
+    toast({
+      title: "Cadastro realizado",
+      description: "Sua conta foi criada com sucesso!",
+    });
+    
+    // Redirect to inicio page
+    navigate('/inicio');
   };
   
   return (
@@ -228,7 +246,7 @@ const Cadastro = () => {
             
             {/* Step 3: Preferences */}
             {step === 3 && (
-              <form className="space-y-6">
+              <form className="space-y-6" onSubmit={handleSubmit}>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                     Faixa Etária de Interesse
