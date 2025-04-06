@@ -15,7 +15,8 @@ const Navbar = () => {
       <div className="container mx-auto px-4 flex justify-between items-center">
         <Link to="/" className="flex items-center gap-2">
           <Crown className="text-coroa-purple h-7 w-7" />
-          <span className="text-2xl font-bold gradient-text">Majestade Privada</span>
+          <span className="text-2xl font-bold gradient-text md:hidden">MP</span>
+          <span className="text-2xl font-bold gradient-text hidden md:block">Majestade Privada</span>
         </Link>
 
         {/* Desktop Navigation */}

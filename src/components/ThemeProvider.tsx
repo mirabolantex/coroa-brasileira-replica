@@ -21,6 +21,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     root.classList.remove('light', 'dark');
     // Add the current theme class
     root.classList.add(theme);
+    
+    // Update data-theme attribute for components
+    document.body.setAttribute('data-theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {

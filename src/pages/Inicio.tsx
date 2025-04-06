@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from "sonner";
-import { Heart, X, MessageCircle, User, Settings, Bell, Wallet, Crown } from 'lucide-react';
+import { Heart, X, MessageCircle, User, Bell, Wallet, Crown, Loader2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -26,6 +27,9 @@ const Inicio = () => {
   const [balance, setBalance] = useState(0);
   const [userProfileImage, setUserProfileImage] = useState<string | null>(null);
   const [hasLimitedMatches, setHasLimitedMatches] = useState(true);
+  const [showBotIntro, setShowBotIntro] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentChatId, setCurrentChatId] = useState<number | null>(null);
 
   useEffect(() => {
     // Simular obtenção da localização do usuário
@@ -135,7 +139,9 @@ const Inicio = () => {
     // Abrir a aba de mensagens e selecionar esta conversa
     setActiveTab("mensagens");
     setSelectedChat(perfil.id);
+    setCurrentChatId(perfil.id);
     setShowMatchDialog(false);
+    setShowBotIntro(true);
   };
 
   const enviarMensagem = (idConversa: number, texto: string) => {
@@ -155,34 +161,83 @@ const Inicio = () => {
       });
     });
     
-    // Simular resposta automatizada após 1-3 segundos
-    setTimeout(() => {
+    // Simular resposta automatizada após 1-3 segundos para quebrar em 3 mensagens
+    const perfilAtual = perfisExpanded.find(p => p.id === idConversa);
+    if (perfilAtual) {
       const respostas = [
-        "Olá! Adorei seu perfil. Podemos nos conhecer melhor?",
-        "Oi! Também gosto de cinema. Qual seu filme favorito?",
-        "Que interessante! Você poderia me contar mais sobre isso?",
-        "Estou curiosa para te conhecer melhor. Quais são seus hobbies?",
-        "Você parece ser uma pessoa divertida! O que gosta de fazer nos fins de semana?",
-        "Nossa, temos muito em comum! Você gosta de viajar?",
-        "Vejo que você é de São Paulo também. Conhece algum restaurante legal por aqui?"
+        [`Oi! Que bom receber sua mensagem!`, `Meu nome é ${perfilAtual.nome}, tenho ${perfilAtual.idade} anos.`, `Estou procurando alguém interessante como você para conversar.`],
+        [`Olá! Adorei seu perfil.`, `Também gosto de cinema e música.`, `O que você gosta de fazer nos fins de semana?`],
+        [`Oi! Que legal receber sua mensagem.`, `Estou curiosa para te conhecer melhor.`, `Você mora por aqui há muito tempo?`]
       ];
       
-      const respostaAleatoria = respostas[Math.floor(Math.random() * respostas.length)];
+      const respostaEscolhida = respostas[Math.floor(Math.random() * respostas.length)];
       
-      setConversas(prevConversas => {
-        return prevConversas.map(conversa => {
-          if (conversa.id === idConversa) {
-            const novasMensagens = [
-              ...conversa.mensagens,
-              { texto: respostaAleatoria, enviada: false, hora: new Date().toLocaleTimeString().slice(0, 5) }
-            ];
-            
-            return { ...conversa, mensagens: novasMensagens };
-          }
-          return conversa;
+      setTimeout(() => {
+        setConversas(prevConversas => {
+          return prevConversas.map(conversa => {
+            if (conversa.id === idConversa) {
+              const novasMensagens = [
+                ...conversa.mensagens,
+                { texto: respostaEscolhida[0], enviada: false, hora: new Date().toLocaleTimeString().slice(0, 5) }
+              ];
+              
+              return { ...conversa, mensagens: novasMensagens };
+            }
+            return conversa;
+          });
         });
-      });
-    }, 1000 + Math.random() * 2000);
+        
+        // Segunda mensagem após mais 1-2 segundos
+        setTimeout(() => {
+          setConversas(prevConversas => {
+            return prevConversas.map(conversa => {
+              if (conversa.id === idConversa) {
+                const novasMensagens = [
+                  ...conversa.mensagens,
+                  { texto: respostaEscolhida[1], enviada: false, hora: new Date().toLocaleTimeString().slice(0, 5) }
+                ];
+                
+                return { ...conversa, mensagens: novasMensagens };
+              }
+              return conversa;
+            });
+          });
+          
+          // Terceira mensagem após mais 1-2 segundos
+          setTimeout(() => {
+            setConversas(prevConversas => {
+              return prevConversas.map(conversa => {
+                if (conversa.id === idConversa) {
+                  const novasMensagens = [
+                    ...conversa.mensagens,
+                    { texto: respostaEscolhida[2], enviada: false, hora: new Date().toLocaleTimeString().slice(0, 5) }
+                  ];
+                  
+                  return { ...conversa, mensagens: novasMensagens };
+                }
+                return conversa;
+              });
+            });
+          }, 1000 + Math.random() * 1000);
+        }, 1000 + Math.random() * 1000);
+      }, 1000 + Math.random() * 1000);
+    }
+  };
+
+  const handleBotConnect = () => {
+    setIsLoading(true);
+    
+    // Simular carregamento por 2 segundos
+    setTimeout(() => {
+      setIsLoading(false);
+      setShowBotIntro(false);
+    }, 2000);
+  };
+
+  const handleQuickReply = (text: string) => {
+    if (currentChatId) {
+      enviarMensagem(currentChatId, text);
+    }
   };
 
   return (
@@ -192,8 +247,11 @@ const Inicio = () => {
         <div className="container mx-auto px-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center">
-              <Crown className="text-coroa-purple h-6 w-6 mr-2" />
-              <h3 className="text-lg font-bold gradient-text">Majestade Privada</h3>
+              <Crown className="text-coroa-purple h-6 w-6" />
+              <Avatar className="h-8 w-8 ml-2 border border-coroa-purple">
+                <AvatarImage src={userProfileImage || undefined} />
+                <AvatarFallback className="bg-gray-700 text-white">MP</AvatarFallback>
+              </Avatar>
             </div>
             
             <div className="ml-4">
@@ -232,8 +290,8 @@ const Inicio = () => {
       
       {/* Welcome Dialog */}
       <Dialog open={showWelcome} onOpenChange={setShowWelcome}>
-        <DialogContent className="sm:max-w-md bg-gray-900 border-gray-800">
-          <DialogHeader>
+        <DialogContent className="sm:max-w-md bg-gray-900 border-gray-800 max-h-[90vh] overflow-y-auto">
+          <DialogHeader className="flex justify-center items-center">
             <DialogTitle className="text-2xl text-center gradient-text">Bem-vindo(a) à Majestade Privada!</DialogTitle>
           </DialogHeader>
           <div className="p-6">
@@ -253,10 +311,54 @@ const Inicio = () => {
         </DialogContent>
       </Dialog>
       
+      {/* Bot Intro Dialog */}
+      <Dialog open={showBotIntro} onOpenChange={setShowBotIntro}>
+        <DialogContent className="sm:max-w-md bg-gray-900 border-gray-800 max-h-[90vh] overflow-y-auto">
+          <DialogHeader className="flex justify-center items-center">
+            <DialogTitle className="text-xl text-center gradient-text">Assistente Majestade Privada</DialogTitle>
+          </DialogHeader>
+          {currentChatId && (
+            <div className="p-4 text-center">
+              <Avatar className="h-16 w-16 mx-auto mb-4">
+                <AvatarImage src="/assets/bot-avatar.png" />
+                <AvatarFallback className="bg-coroa-purple text-white">MP</AvatarFallback>
+              </Avatar>
+              <p className="text-gray-300 text-sm mb-4">
+                Olá! Esta é sua conversa com {conversas.find(c => c.id === currentChatId)?.nome}.
+              </p>
+              <p className="text-gray-300 text-sm mb-4">
+                Sou seu assistente virtual no aplicativo 'Majestade Privada'. Aqui, vou conectar você com mulheres ricas e maduras cheias de fetiches.
+              </p>
+              <p className="text-gray-300 text-sm mb-4">
+                Valorizamos a privacidade e liberdade dos nossos membros — seja respeitoso e você será bem recompensado.
+              </p>
+              <p className="text-gray-300 text-sm mb-4">
+                Posso conectar você com {conversas.find(c => c.id === currentChatId)?.nome}.
+              </p>
+              
+              <Button 
+                className="btn-gradient w-full mt-4" 
+                onClick={handleBotConnect}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Conectando...
+                  </>
+                ) : (
+                  "Conectar"
+                )}
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+      
       {/* Match Dialog */}
       <Dialog open={showMatchDialog} onOpenChange={setShowMatchDialog}>
-        <DialogContent className="sm:max-w-md bg-gray-900 border-gray-800">
-          <DialogHeader>
+        <DialogContent className="sm:max-w-md bg-gray-900 border-gray-800 max-h-[90vh] overflow-y-auto">
+          <DialogHeader className="flex justify-center items-center">
             <DialogTitle className="text-2xl text-center gradient-text">É um Match! 💖</DialogTitle>
           </DialogHeader>
           {matchedPerfil && (
@@ -269,10 +371,7 @@ const Inicio = () => {
               <p className="text-xl mb-6 text-gray-300">
                 Você e <span className="font-bold">{matchedPerfil.nome}</span> deram match!
               </p>
-              <div className="flex justify-center gap-4">
-                <Button variant="outline" className="border-gray-700 text-gray-300" onClick={() => setShowMatchDialog(false)}>
-                  Continuar explorando
-                </Button>
+              <div className="flex justify-center">
                 <Button className="btn-gradient" onClick={() => iniciarConversa(matchedPerfil)}>
                   <MessageCircle className="h-5 w-5 mr-2" />
                   Iniciar conversa
@@ -290,9 +389,10 @@ const Inicio = () => {
           onValueChange={setActiveTab} 
           className="w-full"
         >
-          <TabsList className="grid w-full grid-cols-2 mb-8 bg-gray-800">
+          <TabsList className="grid w-full grid-cols-3 mb-8 bg-gray-800">
             <TabsTrigger value="descobrir" className="data-[state=active]:bg-gray-700">Descobrir</TabsTrigger>
             <TabsTrigger value="mensagens" className="data-[state=active]:bg-gray-700">Mensagens</TabsTrigger>
+            <TabsTrigger value="carteira" className="data-[state=active]:bg-gray-700" onClick={() => navigate('/wallet')}>Carteira</TabsTrigger>
           </TabsList>
           
           {/* Descobrir Tab */}
@@ -326,11 +426,38 @@ const Inicio = () => {
           {/* Mensagens Tab */}
           <TabsContent value="mensagens" className="mt-2">
             {selectedChat ? (
-              <ChatInterface 
-                conversa={conversas.find(c => c.id === selectedChat)!} 
-                onSendMessage={enviarMensagem}
-                onBack={() => setSelectedChat(null)}
-              />
+              <>
+                <ChatInterface 
+                  conversa={conversas.find(c => c.id === selectedChat)!} 
+                  onSendMessage={enviarMensagem}
+                  onBack={() => setSelectedChat(null)}
+                />
+                {conversas.find(c => c.id === selectedChat)?.mensagens.length === 0 && (
+                  <div className="flex flex-wrap justify-center gap-2 mt-4">
+                    <Button 
+                      variant="outline" 
+                      className="text-sm border-coroa-purple text-coroa-purple"
+                      onClick={() => handleQuickReply("Oii🔥")}
+                    >
+                      Oii🔥
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="text-sm border-coroa-purple text-coroa-purple"
+                      onClick={() => handleQuickReply("Oi meu amor")}
+                    >
+                      Oi meu amor
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="text-sm border-coroa-purple text-coroa-purple"
+                      onClick={() => handleQuickReply("Olá, tudo bem?")}
+                    >
+                      Olá, tudo bem?
+                    </Button>
+                  </div>
+                )}
+              </>
             ) : (
               <div className="max-w-md mx-auto">
                 <h2 className="text-xl font-semibold mb-4 text-white">Suas Conversas</h2>
@@ -340,7 +467,13 @@ const Inicio = () => {
                       <Card 
                         key={conversa.id} 
                         className="cursor-pointer hover:bg-gray-800 transition-colors bg-gray-900 border-gray-800"
-                        onClick={() => setSelectedChat(conversa.id)}
+                        onClick={() => {
+                          setSelectedChat(conversa.id);
+                          setCurrentChatId(conversa.id);
+                          if (conversa.mensagens.length === 0) {
+                            setShowBotIntro(true);
+                          }
+                        }}
                       >
                         <CardContent className="p-4 flex items-center">
                           <img 
@@ -380,10 +513,15 @@ const Inicio = () => {
               </div>
             )}
           </TabsContent>
+          
+          {/* Carteira Tab (redirect handled by onClick) */}
+          <TabsContent value="carteira" className="mt-2">
+            <div className="flex justify-center items-center py-20">
+              <Loader2 className="h-8 w-8 animate-spin text-coroa-purple" />
+            </div>
+          </TabsContent>
         </Tabs>
       </main>
-      
-      <Footer />
     </div>
   );
 };
