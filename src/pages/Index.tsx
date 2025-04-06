@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -329,7 +328,10 @@ const Index = () => {
       {/* Final CTA Section */}
       <section className="bg-gradient-to-r from-coroa-purple to-coroa-pink py-20 text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Pronto Para Conhecer Sua Majestade?</h2>
+          <div className="flex justify-center items-center mb-4">
+            <Crown className="text-white h-10 w-10 mr-2" />
+            <h2 className="text-3xl md:text-4xl font-bold">Majestade Privada</h2>
+          </div>
           <p className="text-xl mb-8 max-w-3xl mx-auto">
             Junte-se a milhares de pessoas que já encontraram relacionamentos incríveis em nossa plataforma.
           </p>

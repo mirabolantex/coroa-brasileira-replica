@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from "sonner";
-import { Heart, X, MessageCircle, User, Settings, Bell, Wallet } from 'lucide-react';
+import { Heart, X, MessageCircle, User, Settings, Bell, Wallet, Crown } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -192,13 +191,12 @@ const Inicio = () => {
       <header className="bg-gray-900 shadow-sm py-3 border-b border-gray-800">
         <div className="container mx-auto px-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Avatar className="h-10 w-10 border-2 border-coroa-purple">
-              <AvatarImage src={userProfileImage || undefined} />
-              <AvatarFallback className="bg-gray-700 text-white">MP</AvatarFallback>
-            </Avatar>
+            <div className="flex items-center">
+              <Crown className="text-coroa-purple h-6 w-6 mr-2" />
+              <h3 className="text-lg font-bold gradient-text">Majestade Privada</h3>
+            </div>
             
-            <div>
-              <h3 className="font-medium text-white">Bem-vindo</h3>
+            <div className="ml-4">
               <div className="text-sm text-gray-400 flex items-center">
                 <Bell className="h-3 w-3 mr-1" />
                 Localização: {cidade}
@@ -239,11 +237,10 @@ const Inicio = () => {
             <DialogTitle className="text-2xl text-center gradient-text">Bem-vindo(a) à Majestade Privada!</DialogTitle>
           </DialogHeader>
           <div className="p-6">
-            <img 
-              src="https://app.majestadeprivada.space/wp-content/uploads/2025/04/logo-1.png" 
-              alt="Logo" 
-              className="mx-auto h-16 mb-6" 
-            />
+            <div className="flex justify-center items-center mb-6">
+              <Crown className="text-coroa-purple h-12 w-12 mr-2" />
+              <h2 className="text-2xl font-bold gradient-text">Majestade Privada</h2>
+            </div>
             <p className="text-center mb-6 text-gray-300">
               Estamos muito felizes em ter você aqui! Prepare-se para conhecer pessoas incríveis e viver momentos inesquecíveis.
             </p>

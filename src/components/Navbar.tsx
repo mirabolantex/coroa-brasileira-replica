@@ -14,8 +14,8 @@ const Navbar = () => {
     <nav className="bg-background border-b border-border shadow-md py-3 sticky top-0 z-50">
       <div className="container mx-auto px-4 flex justify-between items-center">
         <Link to="/" className="flex items-center gap-2">
-          <img src="https://app.majestadeprivada.space/wp-content/uploads/2025/04/logo-1.png" alt="Majestade Privada" className="h-10" />
-          <span className="text-2xl font-bold gradient-text hidden md:block">Majestade Privada</span>
+          <Crown className="text-coroa-purple h-7 w-7" />
+          <span className="text-2xl font-bold gradient-text">Majestade Privada</span>
         </Link>
 
         {/* Desktop Navigation */}
