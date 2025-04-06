@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from "sonner";
@@ -245,45 +244,22 @@ const Inicio = () => {
       {/* Header */}
       <header className="bg-gray-900 shadow-sm py-3 border-b border-gray-800">
         <div className="container mx-auto px-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center">
-              <Crown className="text-coroa-purple h-6 w-6" />
-              <Avatar className="h-8 w-8 ml-2 border border-coroa-purple">
-                <AvatarImage src={userProfileImage || undefined} />
-                <AvatarFallback className="bg-gray-700 text-white">MP</AvatarFallback>
-              </Avatar>
-            </div>
-            
-            <div className="ml-4">
-              <div className="text-sm text-gray-400 flex items-center">
-                <Bell className="h-3 w-3 mr-1" />
-                Localização: {cidade}
-              </div>
+          <div className="flex items-center">
+            <Avatar className="h-8 w-8 border border-coroa-purple">
+              <AvatarImage src={userProfileImage || undefined} />
+              <AvatarFallback className="bg-gray-700 text-white">MP</AvatarFallback>
+            </Avatar>
+          </div>
+          
+          <div>
+            <div className="text-sm text-gray-400 flex items-center">
+              <Bell className="h-3 w-3 mr-1" />
+              Localização: {cidade}
             </div>
           </div>
           
-          <div className="flex items-center gap-3">
-            <div className="balance-display px-4 py-2 text-sm">
-              R$ {balance.toFixed(2)}
-            </div>
-            
-            <Button 
-              onClick={() => navigate('/wallet')}
-              variant="ghost"
-              className="text-coroa-purple"
-              size="icon"
-            >
-              <Wallet className="h-5 w-5" />
-            </Button>
-            
-            <Button 
-              onClick={() => navigate('/perfil')}
-              variant="ghost"
-              className="text-coroa-purple"
-              size="icon"
-            >
-              <User className="h-5 w-5" />
-            </Button>
+          <div className="balance-display px-4 py-2 text-sm">
+            R$ {balance.toFixed(2)}
           </div>
         </div>
       </header>
@@ -392,7 +368,7 @@ const Inicio = () => {
           <TabsList className="grid w-full grid-cols-3 mb-8 bg-gray-800">
             <TabsTrigger value="descobrir" className="data-[state=active]:bg-gray-700">Descobrir</TabsTrigger>
             <TabsTrigger value="mensagens" className="data-[state=active]:bg-gray-700">Mensagens</TabsTrigger>
-            <TabsTrigger value="carteira" className="data-[state=active]:bg-gray-700" onClick={() => navigate('/wallet')}>Carteira</TabsTrigger>
+            <TabsTrigger value="carteira" className="data-[state=active]:bg-gray-700">Carteira</TabsTrigger>
           </TabsList>
           
           {/* Descobrir Tab */}
@@ -514,10 +490,30 @@ const Inicio = () => {
             )}
           </TabsContent>
           
-          {/* Carteira Tab (redirect handled by onClick) */}
+          {/* Carteira Tab */}
           <TabsContent value="carteira" className="mt-2">
-            <div className="flex justify-center items-center py-20">
-              <Loader2 className="h-8 w-8 animate-spin text-coroa-purple" />
+            <div className="max-w-md mx-auto">
+              <Card className="mb-4">
+                <CardContent className="p-6">
+                  <h2 className="text-xl font-bold mb-4 gradient-text">Seu Saldo</h2>
+                  <div className="text-4xl font-bold mb-6">{balance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</div>
+                  <Button 
+                    className="btn-gradient w-full"
+                    onClick={() => navigate('/wallet')}
+                  >
+                    <Wallet className="h-5 w-5 mr-2" />
+                    Ir para Carteira
+                  </Button>
+                </CardContent>
+              </Card>
+              <Button 
+                variant="outline" 
+                className="mt-4 w-full border-coroa-purple text-coroa-purple"
+                onClick={() => setActiveTab("descobrir")}
+              >
+                <X className="h-4 w-4 mr-2" />
+                Voltar para Descobrir
+              </Button>
             </div>
           </TabsContent>
         </Tabs>
