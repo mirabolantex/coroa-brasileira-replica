@@ -35,8 +35,8 @@ const Cadastro = () => {
       description: "Sua conta foi criada com sucesso!",
     });
     
-    // Redirect to inicio page
-    navigate('/inicio');
+    // Redirect to inicio page - using navigate for programmatic navigation
+    navigate('/inicio', { replace: true });
   };
   
   return (

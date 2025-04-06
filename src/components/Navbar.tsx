@@ -1,28 +1,40 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Link } from 'react-router-dom';
-import { Crown, Menu, MessageCircle, Search, X, Wallet } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Menu, MessageCircle, Search, X, Wallet } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [profileImage, setProfileImage] = React.useState<string | null>(null);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     // Check if user is logged in from localStorage
     const userLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
     setIsLoggedIn(userLoggedIn);
+    
+    // Add event listener for storage changes
+    const handleStorageChange = () => {
+      const userLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+      setIsLoggedIn(userLoggedIn);
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Cleanup function
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   return (
     <nav className="bg-background border-b border-border shadow-md py-3 sticky top-0 z-50">
       <div className="container mx-auto px-4 flex justify-between items-center">
         <Link to="/" className="flex items-center gap-2">
-          <Crown className="text-coroa-purple h-7 w-7" />
-          <span className="text-2xl font-bold gradient-text md:hidden">MP</span>
-          <span className="text-2xl font-bold gradient-text hidden md:block">Majestade Privada</span>
+          <span className="text-2xl font-bold gradient-text hidden">Majestade Privada</span>
         </Link>
 
         {/* Desktop Navigation */}
