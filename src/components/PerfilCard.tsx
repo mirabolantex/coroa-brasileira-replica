@@ -10,6 +10,7 @@ interface Perfil {
   idade: number;
   foto: string;
   cidade: string;
+  distancia?: string;
   biografia: string;
   interesses: string[];
 }
@@ -32,9 +33,16 @@ const PerfilCard: React.FC<PerfilCardProps> = ({ perfil }) => {
           <h2 className="text-2xl font-bold">
             {perfil.nome}, {perfil.idade}
           </h2>
-          <div className="flex items-center text-sm mt-1">
-            <MapPin className="h-4 w-4 mr-1" />
-            <span>{perfil.cidade}</span>
+          <div className="flex items-center text-sm mt-1 space-x-3">
+            <div className="flex items-center">
+              <MapPin className="h-4 w-4 mr-1" />
+              <span>{perfil.cidade}</span>
+            </div>
+            {perfil.distancia && (
+              <div className="text-coroa-pink">
+                {perfil.distancia}
+              </div>
+            )}
           </div>
         </div>
         
@@ -44,7 +52,7 @@ const PerfilCard: React.FC<PerfilCardProps> = ({ perfil }) => {
       </div>
       
       <CardContent className="p-4">
-        <p className="text-gray-700 dark:text-gray-300 mb-4">
+        <p className="text-gray-300 mb-4">
           {perfil.biografia}
         </p>
         
