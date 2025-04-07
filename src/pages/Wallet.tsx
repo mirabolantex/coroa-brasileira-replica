@@ -4,7 +4,7 @@ import { Wallet as WalletIcon, ArrowLeft, Lock, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
@@ -206,6 +206,9 @@ const Wallet = () => {
         <DialogContent className="bg-gray-900 border-gray-800">
           <DialogHeader>
             <DialogTitle>Adicionar Chave PIX</DialogTitle>
+            <DialogDescription>
+              Adicione uma chave PIX para receber seus saques
+            </DialogDescription>
           </DialogHeader>
           <div className="p-4">
             <RadioGroup 

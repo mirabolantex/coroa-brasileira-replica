@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -226,7 +227,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                     sendFluxoMessage("Fala que gostou vai amor, hoje eu tô no fogo!", 3000);
                   }, 3000);
                 }, 3000);
-              }, 0);
+              }, 3000);
             }, 3000);
           }, 3000);
           break;
@@ -236,7 +237,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           
           // Next message
           setTimeout(() => {
-            sendGiftCard(750, 0);
+            sendGiftCard(750, 3000);
             
             // Next message
             setTimeout(() => {
@@ -248,7 +249,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 startTyping();
                 sendFluxoMessage("Eu vou enviar meu contato e localização a você para que a gente possa conversar mais íntimo o aque acha??", 3000);
               }, 3000);
-            }, 0);
+            }, 3000);
           }, 3000);
           break;
         case 6:
