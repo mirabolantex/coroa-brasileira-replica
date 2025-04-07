@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Crown, Facebook, Instagram, Twitter } from 'lucide-react';
@@ -10,7 +9,6 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <img src="https://app.majestadeprivada.space/wp-content/uploads/2025/04/logo-1.png" alt="Majestade Privada" className="h-8" />
               <span className="text-2xl font-bold gradient-text">Majestade Privada</span>
             </div>
             <p className="text-gray-400 mb-4">
