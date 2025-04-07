@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from "sonner";
@@ -24,7 +25,6 @@ interface Mensagem {
   isImage?: boolean;
   imageUrl?: string;
   isBlurred?: boolean;
-  isContactCard?: boolean;
   isContactCard?: boolean;
 }
 
