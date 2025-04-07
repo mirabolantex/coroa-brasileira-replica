@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from "sonner";
@@ -7,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import Footer from '@/components/Footer';
 import PerfilCard from '@/components/PerfilCard';
 import ChatInterface from '@/components/ChatInterface';
@@ -24,6 +24,7 @@ interface Mensagem {
   isImage?: boolean;
   imageUrl?: string;
   isBlurred?: boolean;
+  isContactCard?: boolean;
   isContactCard?: boolean;
 }
 
