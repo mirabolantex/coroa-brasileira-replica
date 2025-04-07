@@ -8,7 +8,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import Footer from '@/components/Footer';
 import PerfilCard from '@/components/PerfilCard';
 import ChatInterface from '@/components/ChatInterface';
 import { perfisExpanded } from '@/data/perfisExpanded';
@@ -130,7 +129,7 @@ const Inicio = () => {
         return prev;
       });
       
-      // Switch to messages tab but don't notify with toast
+      // Switch to messages tab
       setActiveTab("mensagens");
     }
     
@@ -216,6 +215,29 @@ const Inicio = () => {
     setTimeout(() => {
       setIsLoading(false);
       setShowBotIntro(false);
+      
+      // Add a system message that the connection is established
+      if (currentChatId) {
+        const selectedConversation = conversas.find(c => c.id === currentChatId);
+        if (selectedConversation) {
+          const newMessage = {
+            texto: `Você está conectado com ${selectedConversation.nome}. Boa conversa!`,
+            enviada: false,
+            isBot: true,
+            hora: new Date().toLocaleTimeString().slice(0, 5)
+          };
+          
+          // Update the conversation with the system message and set stage to 1
+          const updatedConversation = {
+            ...selectedConversation,
+            mensagens: [...selectedConversation.mensagens, newMessage],
+            stage: 1,
+            isTyping: true
+          };
+          
+          updateConversa(updatedConversation);
+        }
+      }
     }, 2000);
   };
 
@@ -264,9 +286,6 @@ const Inicio = () => {
             <DialogTitle className="text-2xl text-center gradient-text">Bem-vindo(a) à Majestade Privada!</DialogTitle>
           </DialogHeader>
           <div className="p-6">
-            <div className="flex justify-center items-center mb-6">
-              <h2 className="text-2xl font-bold gradient-text">Majestade Privada</h2>
-            </div>
             <p className="text-center mb-6 text-gray-300">
               Estamos muito felizes em ter você aqui! Prepare-se para conhecer pessoas incríveis e viver momentos inesquecíveis.
             </p>

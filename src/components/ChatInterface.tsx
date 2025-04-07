@@ -53,7 +53,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
 }) => {
   const [mensagem, setMensagem] = useState('');
   const [connecting, setConnecting] = useState(false);
-  const [showBotIntro, setShowBotIntro] = useState(conversa.mensagens.length === 0);
+  const [showBotIntro, setShowBotIntro] = useState(false);
   const [isUserTurn, setIsUserTurn] = useState(true);
   const [showVIPDialog, setShowVIPDialog] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -266,7 +266,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           break;
       }
     }
-  }, [conversa, isUserTurn, showBotIntro, cidade]);
+  }, [conversa, isUserTurn, showBotIntro, cidade, onUpdateConversa]);
   
   const handleSendMessage = () => {
     if (!isUserTurn) {
@@ -408,11 +408,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         {showBotIntro ? (
           <div className="bg-gray-800 rounded-lg p-5 max-w-[80%] mx-auto shadow">
             <div className="flex items-center mb-3">
-              <img 
-                src="https://app.majestadeprivada.space/wp-content/uploads/2025/04/logo-1.png"
-                alt="Bot" 
-                className="w-8 h-8 mr-2 rounded-full"
-              />
               <span className="font-bold text-coroa-purple">Suporte Majestade Privada</span>
             </div>
             <p className="text-gray-300 mb-3">
