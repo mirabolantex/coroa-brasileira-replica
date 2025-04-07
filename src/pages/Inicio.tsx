@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from "sonner";
 import { Heart, X, MessageCircle, User, Bell, Wallet as WalletIcon } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -130,14 +129,8 @@ const Inicio = () => {
         return prev;
       });
       
-      // Notify user about match
-      toast(`Você e ${currentPerfil.nome} deram match!`, {
-        description: "Comece uma conversa agora!",
-        action: {
-          label: "Conversar",
-          onClick: () => iniciarConversa(currentPerfil)
-        },
-      });
+      // Switch to messages tab but don't notify with toast
+      setActiveTab("mensagens");
     }
     
     // Advance to next profile
@@ -383,7 +376,11 @@ const Inicio = () => {
                   balance={balance}
                   onAddBalance={handleAddBalance}
                 />
-                {conversas.find(c => c.id === selectedChat)?.mensagens.length === 0 && (
+                {/* Only show quick replies after connecting to chat */}
+                {conversas.find(c => c.id === selectedChat)?.mensagens.length > 0 && 
+                 !conversas.find(c => c.id === selectedChat)?.needsVIP &&
+                 !conversas.find(c => c.id === selectedChat)?.isTyping &&
+                 conversas.find(c => c.id === selectedChat)?.stage === 1 && (
                   <div className="flex flex-wrap justify-center gap-2 mt-4">
                     <Button 
                       variant="outline" 

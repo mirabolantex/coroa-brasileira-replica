@@ -133,31 +133,33 @@ const Wallet = () => {
                 {balance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
               </div>
               
-              {isVipActive ? (
+              <div className="space-y-4">
+                {isVipActive ? (
+                  <Button 
+                    className="btn-gradient w-full flex items-center gap-2"
+                    onClick={handleWithdraw}
+                  >
+                    <WalletIcon className="h-5 w-5" />
+                    Sacar Agora
+                  </Button>
+                ) : (
+                  <Button 
+                    className="btn-gradient w-full flex items-center gap-2"
+                    onClick={handleGoToVipPage}
+                  >
+                    <Lock className="h-5 w-5" />
+                    Ativar V.I.P para Sacar
+                  </Button>
+                )}
+                
                 <Button 
-                  className="btn-gradient w-full flex items-center gap-2"
-                  onClick={handleWithdraw}
+                  className="w-full border border-coroa-purple text-coroa-purple flex items-center gap-2"
+                  variant="outline"
+                  onClick={() => setShowPixDialog(true)}
                 >
-                  <WalletIcon className="h-5 w-5" />
-                  Sacar Agora
+                  Adicionar Chave Pix
                 </Button>
-              ) : (
-                <Button 
-                  className="btn-gradient w-full flex items-center gap-2"
-                  onClick={handleGoToVipPage}
-                >
-                  <Lock className="h-5 w-5" />
-                  Ativar V.I.P para Sacar
-                </Button>
-              )}
-              
-              <Button 
-                className="mt-4 w-full border border-coroa-purple text-coroa-purple flex items-center gap-2"
-                variant="outline"
-                onClick={() => setShowPixDialog(true)}
-              >
-                Adicionar Chave Pix
-              </Button>
+              </div>
             </CardContent>
           </Card>
           

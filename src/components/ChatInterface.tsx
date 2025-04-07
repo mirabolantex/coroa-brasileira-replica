@@ -163,7 +163,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           break;
         case 2:
           startTyping();
-          sendFluxoMessage("Estou bem graças a deus também!", 3000);
+          sendFluxoMessage("Estou bem graças a deus também!", 4000);
           
           // Start typing for the next messages
           setTimeout(() => {
@@ -173,15 +173,15 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             // Next message
             setTimeout(() => {
               startTyping();
-              sendFluxoMessage("Você parece diferente dos garotos que costumo ver por aqui... Tem algo no seu jeito… calmo, seguro… que me faz querer explorar mais.", 3000);
+              sendFluxoMessage("Você parece diferente dos garotos que costumo ver por aqui... Tem algo no seu jeito… calmo, seguro… que me faz querer explorar mais.", 6000);
               
               // Next message
               setTimeout(() => {
                 startTyping();
-                sendFluxoMessage("Eu gosto de homens discretos, maduros e que sabem manter um segredo. Você é assim?", 3000);
-              }, 3000);
+                sendFluxoMessage("Eu gosto de homens discretos, maduros e que sabem manter um segredo. Você é assim?", 5000);
+              }, 6000);
             }, 3000);
-          }, 3000);
+          }, 4000);
           break;
         case 3:
           startTyping();
@@ -195,41 +195,41 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             // Next message
             setTimeout(() => {
               startTyping();
-              sendFluxoMessage(`Vi que você é daqui de ${cidade} também, se isso for verdade é maravilhoso sabia ? 🔥`, 3000);
+              sendFluxoMessage(`Vi que você é daqui de ${cidade} também, se isso for verdade é maravilhoso sabia ? 🔥`, 5000);
             }, 3000);
           }, 3000);
           break;
         case 4:
           startTyping();
-          sendFluxoMessage("eita amorzinho, hoje eu tive um dia difícil no trabalho sabia, eu posso tá enganada sobre você mas eu queria apimentar um pouco as coisas entre nois dois 😏🔥", 3000);
+          sendFluxoMessage("eita amorzinho, hoje eu tive um dia difícil no trabalho sabia, eu posso tá enganada sobre você mas eu queria apimentar um pouco as coisas entre nois dois 😏🔥", 6000);
           
           // Next message with a gift card
           setTimeout(() => {
             startTyping();
-            sendFluxoMessage("Vou te enviar 250 reais pra caso você queira me encontrar pessoalmente, vou deixar já de presente", 3000);
+            sendFluxoMessage("Vou te enviar 250 reais pra caso você queira me encontrar pessoalmente, vou deixar já de presente", 7000);
             
             // Send gift card
             setTimeout(() => {
-              sendGiftCard(250, 0);
+              sendGiftCard(250, 3000);
               
               // Next message
               setTimeout(() => {
                 startTyping();
-                sendFluxoMessage("amorzinho eu não sei se é fogo esses dias, muito tempo sem transar tirei umas fotinhas esses dias atrás eu vou te mostrar me fala oque achou vai 🔥😏", 3000);
+                sendFluxoMessage("amorzinho eu não sei se é fogo esses dias, muito tempo sem transar tirei umas fotinhas esses dias atrás eu vou te mostrar me fala oque achou vai 🔥😏", 5000);
                 
                 // Send image
                 setTimeout(() => {
-                  sendImage("https://acesso.majestadeprivada.space/img/fluxo1.jpg", 3000);
+                  sendImage("https://acesso.majestadeprivada.space/img/fluxo1.jpg", 4000);
                   
                   // Next message
                   setTimeout(() => {
                     startTyping();
                     sendFluxoMessage("Fala que gostou vai amor, hoje eu tô no fogo!", 3000);
-                  }, 3000);
-                }, 3000);
+                  }, 4000);
+                }, 5000);
               }, 3000);
-            }, 3000);
-          }, 3000);
+            }, 7000);
+          }, 6000);
           break;
         case 5:
           startTyping();
@@ -242,25 +242,25 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             // Next message
             setTimeout(() => {
               startTyping();
-              sendFluxoMessage("Posso está endoidando mas ultimamente estou tão só amor, por favor vamos sair...", 3000);
+              sendFluxoMessage("Posso está endoidando mas ultimamente estou tão só amor, por favor vamos sair...", 5000);
               
               // Next message
               setTimeout(() => {
                 startTyping();
-                sendFluxoMessage("Eu vou enviar meu contato e localização a você para que a gente possa conversar mais íntimo o aque acha??", 3000);
-              }, 3000);
+                sendFluxoMessage("Eu vou enviar meu contato e localização a você para que a gente possa conversar mais íntimo o aque acha??", 6000);
+              }, 5000);
             }, 3000);
           }, 3000);
           break;
         case 6:
           startTyping();
-          sendFluxoMessage("Amor, pode ser o dia que você quiser estou trabalhando como gerente e não aguento mais só ir pro trabalho pra casa sem ao menos sair...", 3000);
+          sendFluxoMessage("Amor, pode ser o dia que você quiser estou trabalhando como gerente e não aguento mais só ir pro trabalho pra casa sem ao menos sair...", 6000);
           
           // Next message with contact card
           setTimeout(() => {
             startTyping();
-            sendContactCard(3000);
-          }, 3000);
+            sendContactCard(6000);
+          }, 6000);
           break;
         default:
           break;
