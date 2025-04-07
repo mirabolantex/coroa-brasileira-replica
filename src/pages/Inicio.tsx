@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from "sonner";
-import { Heart, X, MessageCircle, User, Bell, Wallet, Crown, Loader2 } from 'lucide-react';
+import { Heart, X, MessageCircle, User, Bell, Wallet as WalletIcon } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,30 +13,86 @@ import PerfilCard from '@/components/PerfilCard';
 import ChatInterface from '@/components/ChatInterface';
 import { perfisExpanded } from '@/data/perfisExpanded';
 
+// Interface for conversation message
+interface Mensagem {
+  texto: string;
+  enviada: boolean;
+  hora: string;
+  isBot?: boolean;
+  isGiftCard?: boolean;
+  giftValue?: number;
+  giftClaimed?: boolean;
+  isImage?: boolean;
+  imageUrl?: string;
+  isBlurred?: boolean;
+  isContactCard?: boolean;
+}
+
+// Interface for conversation
+interface Conversa {
+  id: number;
+  nome: string;
+  foto: string;
+  mensagens: Mensagem[];
+  stage?: number;
+  isTyping?: boolean;
+  needsVIP?: boolean;
+}
+
 const Inicio = () => {
   const navigate = useNavigate();
   const [showWelcome, setShowWelcome] = useState(true);
   const [activeTab, setActiveTab] = useState<string>("descobrir");
   const [currentPerfilIndex, setCurrentPerfilIndex] = useState(0);
   const [matchedPerfis, setMatchedPerfis] = useState<number[]>([]);
-  const [conversas, setConversas] = useState<{id: number, nome: string, foto: string, mensagens: {texto: string, enviada: boolean, hora: string, isBot?: boolean}[]}[]>([]);
+  const [conversas, setConversas] = useState<Conversa[]>([]);
   const [selectedChat, setSelectedChat] = useState<number | null>(null);
-  const [showMatchDialog, setShowMatchDialog] = useState(false);
-  const [matchedPerfil, setMatchedPerfil] = useState<{id: number, nome: string, foto: string} | null>(null);
+  const [showBotIntro, setShowBotIntro] = useState(false);
+  const [currentChatId, setCurrentChatId] = useState<number | null>(null);
   const [cidade, setCidade] = useState("São Paulo");
   const [balance, setBalance] = useState(0);
   const [userProfileImage, setUserProfileImage] = useState<string | null>(null);
   const [hasLimitedMatches, setHasLimitedMatches] = useState(true);
-  const [showBotIntro, setShowBotIntro] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentChatId, setCurrentChatId] = useState<number | null>(null);
 
+  // Load data from localStorage on component mount
   useEffect(() => {
-    // Simular obtenção da localização do usuário
+    // Load saved conversations
+    const savedConversas = localStorage.getItem('conversations');
+    if (savedConversas) {
+      setConversas(JSON.parse(savedConversas));
+    }
+    
+    // Load matched profiles
+    const savedMatches = localStorage.getItem('matchedProfiles');
+    if (savedMatches) {
+      setMatchedPerfis(JSON.parse(savedMatches));
+    }
+    
+    // Load wallet balance
+    const savedBalance = localStorage.getItem('walletBalance');
+    if (savedBalance) {
+      setBalance(parseFloat(savedBalance));
+    }
+    
+    // Simulate getting user location
     setTimeout(() => {
       setCidade("São Paulo");
     }, 1000);
   }, []);
+  
+  // Save data to localStorage when it changes
+  useEffect(() => {
+    localStorage.setItem('conversations', JSON.stringify(conversas));
+  }, [conversas]);
+  
+  useEffect(() => {
+    localStorage.setItem('matchedProfiles', JSON.stringify(matchedPerfis));
+  }, [matchedPerfis]);
+  
+  useEffect(() => {
+    localStorage.setItem('walletBalance', balance.toString());
+  }, [balance]);
 
   const handleLike = () => {
     const currentPerfil = perfisExpanded[currentPerfilIndex];
@@ -51,56 +108,43 @@ const Inicio = () => {
       return;
     }
     
-    // Se for o primeiro perfil, sempre dar match
+    // If it's the first profile or random chance, give a match
     if (currentPerfilIndex === 0 || Math.random() > 0.3) {
-      // Adicionar à lista de matches
+      // Add to matched profiles list
       setMatchedPerfis(prev => [...prev, currentPerfil.id]);
       
-      // Mostrar notificação de match imediatamente para o primeiro perfil
-      if (currentPerfilIndex === 0) {
-        setMatchedPerfil(currentPerfil);
-        setShowMatchDialog(true);
-        
-        // Criar uma conversa vazia para este perfil
-        const novaConversa = {
-          id: currentPerfil.id,
-          nome: currentPerfil.nome,
-          foto: currentPerfil.foto,
-          mensagens: []
-        };
-        
-        setConversas(prev => [...prev, novaConversa]);
-      } else {
-        // Para os outros perfis, mostrar notificação após alguns segundos
-        setTimeout(() => {
-          setMatchedPerfil(currentPerfil);
-          setShowMatchDialog(true);
-          toast(`Você e ${currentPerfil.nome} deram match!`, {
-            description: "Comece uma conversa agora!",
-            action: {
-              label: "Conversar",
-              onClick: () => iniciarConversa(currentPerfil)
-            },
-          });
-          
-          // Criar uma conversa vazia para este perfil
-          const novaConversa = {
-            id: currentPerfil.id,
-            nome: currentPerfil.nome,
-            foto: currentPerfil.foto,
-            mensagens: []
-          };
-          
-          setConversas(prev => [...prev, novaConversa]);
-        }, Math.random() > 0.5 ? 7000 : 15000); // Randomizar entre 7 ou 15 segundos
-      }
+      // Create an empty conversation for this profile
+      const novaConversa: Conversa = {
+        id: currentPerfil.id,
+        nome: currentPerfil.nome,
+        foto: currentPerfil.foto,
+        mensagens: []
+      };
+      
+      setConversas(prev => {
+        // Check if conversation already exists
+        const existingConversation = prev.find(c => c.id === currentPerfil.id);
+        if (!existingConversation) {
+          return [...prev, novaConversa];
+        }
+        return prev;
+      });
+      
+      // Notify user about match
+      toast(`Você e ${currentPerfil.nome} deram match!`, {
+        description: "Comece uma conversa agora!",
+        action: {
+          label: "Conversar",
+          onClick: () => iniciarConversa(currentPerfil)
+        },
+      });
     }
     
-    // Avançar para o próximo perfil
+    // Advance to next profile
     if (currentPerfilIndex < perfisExpanded.length - 1) {
       setCurrentPerfilIndex(prevIndex => prevIndex + 1);
     } else {
-      // Reiniciar quando acabar os perfis
+      // Restart when profiles end
       setCurrentPerfilIndex(0);
       toast("Você viu todos os perfis disponíveis", {
         description: "Volte mais tarde para ver novos perfis!",
@@ -120,12 +164,12 @@ const Inicio = () => {
   };
 
   const iniciarConversa = (perfil: {id: number, nome: string, foto: string}) => {
-    // Verificar se já existe uma conversa com esse perfil
-    const conversaExistente = conversas.find(c => c.id === perfil.id);
+    // Check if conversation with this profile already exists
+    const existingConversation = conversas.find(c => c.id === perfil.id);
     
-    if (!conversaExistente) {
-      // Criar nova conversa
-      const novaConversa = {
+    if (!existingConversation) {
+      // Create new conversation
+      const novaConversa: Conversa = {
         id: perfil.id,
         nome: perfil.nome,
         foto: perfil.foto,
@@ -135,11 +179,10 @@ const Inicio = () => {
       setConversas(prev => [...prev, novaConversa]);
     }
     
-    // Abrir a aba de mensagens e selecionar esta conversa
+    // Open messages tab and select this conversation
     setActiveTab("mensagens");
     setSelectedChat(perfil.id);
     setCurrentChatId(perfil.id);
-    setShowMatchDialog(false);
     setShowBotIntro(true);
   };
 
@@ -159,74 +202,23 @@ const Inicio = () => {
         return conversa;
       });
     });
-    
-    // Simular resposta automatizada após 1-3 segundos para quebrar em 3 mensagens
-    const perfilAtual = perfisExpanded.find(p => p.id === idConversa);
-    if (perfilAtual) {
-      const respostas = [
-        [`Oi! Que bom receber sua mensagem!`, `Meu nome é ${perfilAtual.nome}, tenho ${perfilAtual.idade} anos.`, `Estou procurando alguém interessante como você para conversar.`],
-        [`Olá! Adorei seu perfil.`, `Também gosto de cinema e música.`, `O que você gosta de fazer nos fins de semana?`],
-        [`Oi! Que legal receber sua mensagem.`, `Estou curiosa para te conhecer melhor.`, `Você mora por aqui há muito tempo?`]
-      ];
-      
-      const respostaEscolhida = respostas[Math.floor(Math.random() * respostas.length)];
-      
-      setTimeout(() => {
-        setConversas(prevConversas => {
-          return prevConversas.map(conversa => {
-            if (conversa.id === idConversa) {
-              const novasMensagens = [
-                ...conversa.mensagens,
-                { texto: respostaEscolhida[0], enviada: false, hora: new Date().toLocaleTimeString().slice(0, 5) }
-              ];
-              
-              return { ...conversa, mensagens: novasMensagens };
-            }
-            return conversa;
-          });
-        });
-        
-        // Segunda mensagem após mais 1-2 segundos
-        setTimeout(() => {
-          setConversas(prevConversas => {
-            return prevConversas.map(conversa => {
-              if (conversa.id === idConversa) {
-                const novasMensagens = [
-                  ...conversa.mensagens,
-                  { texto: respostaEscolhida[1], enviada: false, hora: new Date().toLocaleTimeString().slice(0, 5) }
-                ];
-                
-                return { ...conversa, mensagens: novasMensagens };
-              }
-              return conversa;
-            });
-          });
-          
-          // Terceira mensagem após mais 1-2 segundos
-          setTimeout(() => {
-            setConversas(prevConversas => {
-              return prevConversas.map(conversa => {
-                if (conversa.id === idConversa) {
-                  const novasMensagens = [
-                    ...conversa.mensagens,
-                    { texto: respostaEscolhida[2], enviada: false, hora: new Date().toLocaleTimeString().slice(0, 5) }
-                  ];
-                  
-                  return { ...conversa, mensagens: novasMensagens };
-                }
-                return conversa;
-              });
-            });
-          }, 1000 + Math.random() * 1000);
-        }, 1000 + Math.random() * 1000);
-      }, 1000 + Math.random() * 1000);
-    }
+  };
+
+  const updateConversa = (updatedConversa: Conversa) => {
+    setConversas(prevConversas => {
+      return prevConversas.map(conversa => {
+        if (conversa.id === updatedConversa.id) {
+          return updatedConversa;
+        }
+        return conversa;
+      });
+    });
   };
 
   const handleBotConnect = () => {
     setIsLoading(true);
     
-    // Simular carregamento por 2 segundos
+    // Simulate loading for 2 seconds
     setTimeout(() => {
       setIsLoading(false);
       setShowBotIntro(false);
@@ -237,6 +229,13 @@ const Inicio = () => {
     if (currentChatId) {
       enviarMensagem(currentChatId, text);
     }
+  };
+  
+  const handleAddBalance = (amount: number) => {
+    setBalance(prevBalance => {
+      const newBalance = prevBalance + amount;
+      return newBalance < 0 ? 0 : newBalance;
+    });
   };
 
   return (
@@ -272,7 +271,6 @@ const Inicio = () => {
           </DialogHeader>
           <div className="p-6">
             <div className="flex justify-center items-center mb-6">
-              <Crown className="text-coroa-purple h-12 w-12 mr-2" />
               <h2 className="text-2xl font-bold gradient-text">Majestade Privada</h2>
             </div>
             <p className="text-center mb-6 text-gray-300">
@@ -319,40 +317,13 @@ const Inicio = () => {
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
                     Conectando...
                   </>
                 ) : (
                   "Conectar"
                 )}
               </Button>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-      
-      {/* Match Dialog */}
-      <Dialog open={showMatchDialog} onOpenChange={setShowMatchDialog}>
-        <DialogContent className="sm:max-w-md bg-gray-900 border-gray-800 max-h-[90vh] overflow-y-auto">
-          <DialogHeader className="flex justify-center items-center">
-            <DialogTitle className="text-2xl text-center gradient-text">É um Match! 💖</DialogTitle>
-          </DialogHeader>
-          {matchedPerfil && (
-            <div className="p-6 text-center">
-              <img 
-                src={matchedPerfil.foto} 
-                alt={matchedPerfil.nome} 
-                className="w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-coroa-pink"
-              />
-              <p className="text-xl mb-6 text-gray-300">
-                Você e <span className="font-bold">{matchedPerfil.nome}</span> deram match!
-              </p>
-              <div className="flex justify-center">
-                <Button className="btn-gradient" onClick={() => iniciarConversa(matchedPerfil)}>
-                  <MessageCircle className="h-5 w-5 mr-2" />
-                  Iniciar conversa
-                </Button>
-              </div>
             </div>
           )}
         </DialogContent>
@@ -407,6 +378,10 @@ const Inicio = () => {
                   conversa={conversas.find(c => c.id === selectedChat)!} 
                   onSendMessage={enviarMensagem}
                   onBack={() => setSelectedChat(null)}
+                  onUpdateConversa={updateConversa}
+                  cidade={cidade}
+                  balance={balance}
+                  onAddBalance={handleAddBalance}
                 />
                 {conversas.find(c => c.id === selectedChat)?.mensagens.length === 0 && (
                   <div className="flex flex-wrap justify-center gap-2 mt-4">
@@ -501,8 +476,8 @@ const Inicio = () => {
                     className="btn-gradient w-full"
                     onClick={() => navigate('/wallet')}
                   >
-                    <Wallet className="h-5 w-5 mr-2" />
-                    Ir para Carteira
+                    <WalletIcon className="h-5 w-5 mr-2" />
+                    Sacar Agora
                   </Button>
                 </CardContent>
               </Card>
