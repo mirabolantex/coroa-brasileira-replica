@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +14,7 @@ interface Mensagem {
   isBot?: boolean;
   isGiftCard?: boolean;
   giftValue?: number;
+  giftClaimed?: boolean;
   isImage?: boolean;
   imageUrl?: string;
   isBlurred?: boolean;
