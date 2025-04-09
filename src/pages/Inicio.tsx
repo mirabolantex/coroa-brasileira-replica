@@ -129,8 +129,27 @@ const Inicio = () => {
         return prev;
       });
       
-      // Switch to messages tab
+      // Show success notification with action to go to messages
+      toast.success("Você tem um novo match!", {
+        description: `${currentPerfil.nome} também gostou de você! Converse agora.`,
+        action: {
+          label: "Mensagens",
+          onClick: () => {
+            setActiveTab("mensagens");
+            setSelectedChat(currentPerfil.id);
+            setCurrentChatId(currentPerfil.id);
+            setShowBotIntro(true);
+          }
+        }
+      });
+      
+      // Automatically switch to messages tab and select this chat
       setActiveTab("mensagens");
+      setSelectedChat(currentPerfil.id);
+      setCurrentChatId(currentPerfil.id);
+      setTimeout(() => {
+        setShowBotIntro(true);
+      }, 500);
     }
     
     // Advance to next profile
