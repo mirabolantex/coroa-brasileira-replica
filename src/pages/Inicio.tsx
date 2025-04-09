@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from "sonner";
@@ -240,7 +239,7 @@ const Inicio = () => {
         const selectedConversation = conversas.find(c => c.id === currentChatId);
         if (selectedConversation) {
           const newMessage = {
-            texto: `Você está conectado com ${selectedConversation.nome}. Boa conversa!`,
+            texto: `Agora você está conectado com ${selectedConversation.nome}.`,
             enviada: false,
             isBot: true,
             hora: new Date().toLocaleTimeString().slice(0, 5)
@@ -251,7 +250,7 @@ const Inicio = () => {
             ...selectedConversation,
             mensagens: [...selectedConversation.mensagens, newMessage],
             stage: 1,
-            isTyping: true
+            isTyping: false
           };
           
           updateConversa(updatedConversation);
@@ -332,13 +331,7 @@ const Inicio = () => {
               <p className="text-gray-300 text-sm mb-4">
                 Olá! Esta é sua conversa com {conversas.find(c => c.id === currentChatId)?.nome}.
               </p>
-              <p className="text-gray-300 text-sm mb-4">
-                Sou seu assistente virtual no aplicativo 'Majestade Privada'. Aqui, vou conectar você com mulheres ricas e maduras cheias de fetiches.
-              </p>
-              <p className="text-gray-300 text-sm mb-4">
-                Valorizamos a privacidade e liberdade dos nossos membros — seja respeitoso e você será bem recompensado.
-              </p>
-              <p className="text-gray-300 text-sm mb-4">
+              <p className="text-gray-300 text-sm mb-5">
                 Posso conectar você com {conversas.find(c => c.id === currentChatId)?.nome}.
               </p>
               

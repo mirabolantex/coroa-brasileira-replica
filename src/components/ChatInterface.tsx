@@ -311,7 +311,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       
       // Add a system message that the connection is established
       const newMessage = {
-        texto: `Você está conectado com ${conversa.nome}. Boa conversa!`,
+        texto: `Agora você está conectado com ${conversa.nome}.`,
         enviada: false,
         isBot: true,
         hora: new Date().toLocaleTimeString().slice(0, 5)
@@ -321,11 +321,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         ...conversa,
         mensagens: [...conversa.mensagens, newMessage],
         stage: 1,
-        isTyping: true
+        isTyping: false
       });
       
-      // Set user turn to false since the bot will send first message
-      setIsUserTurn(false);
+      // Set user turn to true since we want the user to send the first message
+      setIsUserTurn(true);
     }, 2000);
   };
   
@@ -408,16 +408,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         {showBotIntro ? (
           <div className="bg-gray-800 rounded-lg p-5 max-w-[80%] mx-auto shadow">
             <div className="flex items-center mb-3">
-              <span className="font-bold text-coroa-purple">Suporte Majestade Privada</span>
+              <span className="font-bold text-coroa-purple">Assistente Majestade Privada</span>
             </div>
             <p className="text-gray-300 mb-3">
               Olá! Esta é a sua conversa com {conversa.nome}.
-            </p>
-            <p className="text-gray-300 mb-3">
-              Sou seu assistente virtual no app 'Majestade Privada'. Aqui, irei conectar você com mulheres ricas e maduras cheias de fetiches.
-            </p>
-            <p className="text-gray-300 mb-3">
-              Valorizamos a privacidade e liberdade dos nossos membros — seja respeitoso e será bem recompensado.
             </p>
             <p className="text-gray-300 mb-5">
               Posso conectar você com {conversa.nome}.
@@ -427,7 +421,14 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
               onClick={handleConnectToUser}
               disabled={connecting}
             >
-              {connecting ? "Conectando..." : "Conectar"}
+              {connecting ? (
+                <>
+                  <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                  Conectando...
+                </>
+              ) : (
+                "Conectar"
+              )}
             </Button>
           </div>
         ) : (
