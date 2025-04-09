@@ -58,7 +58,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   
   // Handle the automated conversation flow based on stages
   useEffect(() => {
-    if (!conversa.stage || conversa.isTyping || showBotIntro || conversa.needsVIP) return;
+    if (!conversa.stage || conversa.isTyping || showBotIntro) return;
     
     const startTyping = () => {
       onUpdateConversa({
@@ -67,7 +67,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       });
     };
     
-    const sendFluxoMessage = (message: string, delay = 3000, additionalProps = {}) => {
+    const sendBotMessage = (message: string, delay = 3000, additionalProps = {}) => {
       setTimeout(() => {
         const newMensagem: Mensagem = {
           texto: message,
@@ -150,55 +150,45 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     if (!isUserTurn) {
       switch(conversa.stage) {
         case 1:
+          // First bot message after user sends first message
           startTyping();
-          sendFluxoMessage("Oiii gatinho🔥, tudo bem?", 3000);
+          sendBotMessage("Oiii gatinho🔥, tudo bem?", 3000);
           break;
         case 2:
+          // After user responds to "tudo bem?"
           startTyping();
-          sendFluxoMessage("Estou bem graças a deus também!", 4000);
+          sendBotMessage("Estou bem melhor agora, sua vibe me chamou atenção.", 3000);
           
-          // Start typing for the next messages
+          // Send follow-up message
           setTimeout(() => {
             startTyping();
-            sendFluxoMessage("Hmmm… sua vibe me chamou atenção.", 3000);
-            
-            // Next message
-            setTimeout(() => {
-              startTyping();
-              sendFluxoMessage("Você parece diferente dos garotos que costumo ver por aqui... Tem algo no seu jeito… calmo, seguro… que me faz querer explorar mais.", 6000);
-              
-              // Next message
-              setTimeout(() => {
-                startTyping();
-                sendFluxoMessage("Eu gosto de homens discretos, maduros e que sabem manter um segredo. Você é assim?", 5000);
-              }, 6000);
-            }, 3000);
+            sendBotMessage("Eu gosto de homens discretos, maduros e que sabem manter um segredo. Você parece ser assim, parece que sabe manter e me faz querer explorar mais.", 5000);
           }, 4000);
           break;
         case 3:
           startTyping();
-          sendFluxoMessage("Eu valorizo muito isso… principalmente porque sou uma mulher de posição.", 3000);
+          sendBotMessage("Eu valorizo muito isso… principalmente porque sou uma mulher de posição.", 3000);
           
           // Next message
           setTimeout(() => {
             startTyping();
-            sendFluxoMessage("Gosto de ter controle, mas também adoro ser surpreendida 😏.", 3000);
+            sendBotMessage("Gosto de ter controle, mas também adoro ser surpreendida 😏.", 3000);
             
             // Next message
             setTimeout(() => {
               startTyping();
-              sendFluxoMessage(`Vi que você é daqui de ${cidade} também, se isso for verdade é maravilhoso sabia ? 🔥`, 5000);
+              sendBotMessage(`Vi que você é daqui de ${cidade} também, se isso for verdade é maravilhoso sabia? 🔥`, 4000);
             }, 3000);
           }, 3000);
           break;
         case 4:
           startTyping();
-          sendFluxoMessage("eita amorzinho, hoje eu tive um dia difícil no trabalho sabia, eu posso tá enganada sobre você mas eu queria apimentar um pouco as coisas entre nois dois 😏🔥", 6000);
+          sendBotMessage("Eita amorzinho, hoje eu tive um dia difícil no trabalho sabia, eu posso tá enganada sobre você mas eu queria apimentar um pouco as coisas entre nois dois 😏🔥", 5000);
           
           // Next message with a gift card
           setTimeout(() => {
             startTyping();
-            sendFluxoMessage("Vou te enviar 250 reais pra caso você queira me encontrar pessoalmente, vou deixar já de presente", 7000);
+            sendBotMessage("Vou te enviar 250 reais pra caso você queira me encontrar pessoalmente, vou deixar já de presente", 5000);
             
             // Send gift card
             setTimeout(() => {
@@ -207,7 +197,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
               // Next message
               setTimeout(() => {
                 startTyping();
-                sendFluxoMessage("amorzinho eu não sei se é fogo esses dias, muito tempo sem transar tirei umas fotinhas esses dias atrás eu vou te mostrar me fala oque achou vai 🔥😏", 5000);
+                sendBotMessage("Amorzinho eu não sei se é fogo esses dias, muito tempo sem transar tirei umas fotinhas esses dias atrás eu vou te mostrar me fala oque achou vai 🔥😏", 5000);
                 
                 // Send image
                 setTimeout(() => {
@@ -216,16 +206,16 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                   // Next message
                   setTimeout(() => {
                     startTyping();
-                    sendFluxoMessage("Fala que gostou vai amor, hoje eu tô no fogo!", 3000);
+                    sendBotMessage("Fala que gostou vai amor, hoje eu tô no fogo!", 3000);
                   }, 4000);
                 }, 5000);
               }, 3000);
-            }, 7000);
-          }, 6000);
+            }, 5000);
+          }, 5000);
           break;
         case 5:
           startTyping();
-          sendFluxoMessage("Você tá me deixando cada vez mais louca, deus, que homem!", 3000);
+          sendBotMessage("Você tá me deixando cada vez mais louca, deus, que homem!", 3000);
           
           // Next message
           setTimeout(() => {
@@ -234,25 +224,25 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             // Next message
             setTimeout(() => {
               startTyping();
-              sendFluxoMessage("Posso está endoidando mas ultimamente estou tão só amor, por favor vamos sair...", 5000);
+              sendBotMessage("Posso está endoidando mas ultimamente estou tão só amor, por favor vamos sair...", 4000);
               
               // Next message
               setTimeout(() => {
                 startTyping();
-                sendFluxoMessage("Eu vou enviar meu contato e localização a você para que a gente possa conversar mais íntimo o aque acha??", 6000);
-              }, 5000);
+                sendBotMessage("Eu vou enviar meu contato e localização a você para que a gente possa conversar mais íntimo o que acha??", 4000);
+              }, 4000);
             }, 3000);
           }, 3000);
           break;
         case 6:
           startTyping();
-          sendFluxoMessage("Amor, pode ser o dia que você quiser estou trabalhando como gerente e não aguento mais só ir pro trabalho pra casa sem ao menos sair...", 6000);
+          sendBotMessage("Amor, pode ser o dia que você quiser estou trabalhando como gerente e não aguento mais só ir pro trabalho pra casa sem ao menos sair...", 5000);
           
           // Next message with contact card
           setTimeout(() => {
             startTyping();
-            sendContactCard(6000);
-          }, 6000);
+            sendContactCard(5000);
+          }, 5000);
           break;
         default:
           break;
@@ -262,7 +252,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   
   const handleSendMessage = (texto: string) => {
     if (!isUserTurn) {
-      toast.error("Você não está na sua vez");
+      toast.error("Aguarde a resposta antes de enviar outra mensagem");
       return;
     }
     
@@ -305,7 +295,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       onUpdateConversa({
         ...conversa,
         mensagens: [...conversa.mensagens, newMessage],
-        stage: 1,
+        stage: 0,  // Set to 0 initially, will increment when user sends first message
         isTyping: false
       });
       
